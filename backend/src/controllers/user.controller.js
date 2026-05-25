@@ -65,6 +65,7 @@ export const loginUser = asyncHandler(async (req, res) => {
     secure: true,
     sameSite: "none",
     path: "/",
+    maxAge: 1000 * 60 * 60 * 24 * 7,
   };
 
   res.cookie("accessToken", accessToken, cookieOptions);
