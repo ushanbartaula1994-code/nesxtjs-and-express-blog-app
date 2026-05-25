@@ -12,8 +12,7 @@ const app = express();
 // middleware FIRST
 app.use(
   cors({
-    origin:  [ "http://localhost:3000",
-  "https://nesxtjs-and-express-blog-app.vercel.app" ],
+      origin: "https://nesxtjs-and-express-blog-app.vercel.app",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
