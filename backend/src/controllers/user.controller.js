@@ -60,14 +60,12 @@ export const loginUser = asyncHandler(async (req, res) => {
 
   const loggedInUser = await User.findById(user._id).select("-password");
 
-  const options = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax", // REQUIRED for localhost
-    path: "/" 
-
-    // secure: false,// because we are running in localstorage secure true
-  };
+ const options = {
+   httpOnly: true,
+   secure: true,
+   sameSite: "none",
+   path: "/",
+ };
 
   return res
     .status(200)
