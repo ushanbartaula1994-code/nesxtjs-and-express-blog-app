@@ -74,7 +74,7 @@ function Navbar() {
             <span className="text-sm text-slate-500">Loading...</span>
           ) : isAuthenticated ? (
             <div className="flex items-center gap-3">
-              <span className="text-sm text-white font-medium uppercase hidden bg-black  sm:block">
+              <span className="text-sm text-white font-medium uppercase py-1 px-1 rounded hidden bg-black  sm:block">
                 {user?.fullname}
               </span>
 
