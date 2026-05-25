@@ -29,7 +29,7 @@ function Navbar() {
         
         <Link href="/" className="flex items-center gap-3">
           <Image
-            src="/logo.jfif"
+            src="/logo.jpg"
             alt="logo"
             width={42}
             height={42}
@@ -74,7 +74,7 @@ function Navbar() {
             <span className="text-sm text-slate-500">Loading...</span>
           ) : isAuthenticated ? (
             <div className="flex items-center gap-3">
-              <span className="text-sm text-slate-700 font-medium hidden sm:block">
+              <span className="text-sm text-white font-medium uppercase hidden bg-black  sm:block">
                 {user?.fullname}
               </span>
 
