@@ -1,5 +1,6 @@
 "use client";
 
+import {useEffect} from 'react'
 import { useAuth } from "@/app/context/authContext";
 import Link from "next/link";
 import Image from "next/image";
@@ -18,11 +19,14 @@ import {
 
 function Navbar() {
   const { isLoading, isAuthenticated, logOut, logIn, user } = useAuth();
+   useEffect(() => {
+     console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
+   }, []);
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-slate-200">
       <div className="flex items-center justify-between px-6 md:px-10 h-20">
-        {/* Logo */}
+        
         <Link href="/" className="flex items-center gap-3">
           <Image
             src="/logo.jfif"
@@ -32,11 +36,11 @@ function Navbar() {
             className="rounded-full"
           />
           <span className="text-xl font-bold text-slate-800">BlogApp</span>
+          
         </Link>
 
-        {/* Center Links */}
+     
         <div className="hidden md:flex items-center gap-6 text-sm text-slate-600">
-          
           {!isAuthenticated && (
             <Link href="/" className="hover:text-blue-600 transition">
               Home
@@ -65,7 +69,6 @@ function Navbar() {
           )}
         </div>
 
-        {/* Right Side */}
         <div className="flex items-center gap-3">
           {isLoading ? (
             <span className="text-sm text-slate-500">Loading...</span>
@@ -90,7 +93,10 @@ function Navbar() {
 
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={logOut} className="cursor-pointer">
+                    <AlertDialogAction
+                      onClick={logOut}
+                      className="cursor-pointer"
+                    >
                       Logout
                     </AlertDialogAction>
                   </AlertDialogFooter>
