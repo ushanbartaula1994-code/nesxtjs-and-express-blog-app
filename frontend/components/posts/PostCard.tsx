@@ -37,59 +37,71 @@ function PostCard({ post }: PostCardProps) {
     router.push(`/posts/edit/${post._id}`);
   };
 
- return (
-   <article className="border-b border-slate-200 py-10">
-     {/* IMAGE */}
-     {post.image && (
-       <div className="relative w-full h-[420px] overflow-hidden rounded-3xl">
-         <Image
-           src={post.image}
-           alt={post.title}
-           fill
-           className="object-cover"
-         />
-       </div>
-     )}
+ 
+  return (
+  <article className="rounded-[32px] border border-[#ebe5dd] bg-white/80 overflow-hidden transition hover:shadow-[0_10px_40px_rgba(0,0,0,0.06)]">
+
+    {/* IMAGE */}
+    {post.image && (
+      <div className="relative w-full h-80 overflow-hidden">
+        <Image
+          src={post.image}
+          alt={post.title}
+          fill
+          className="object-cover"
+        />
+      </div>
+    )}
+    <div className="p-8 md:p-10">
 
      
-     <div className="mt-6 max-w-3xl">
-       
-       <div className="flex items-center gap-3 text-sm text-slate-500">
-         <span>{post.author?.username}</span>
-         <span className="w-1 h-1 rounded-full bg-slate-400" />
-         <span>{new Date(post.createdAt).toLocaleDateString()}</span>
-       </div>
+      <div className="flex items-center justify-between flex-wrap gap-4">
 
-       
-       <h2 className="mt-4 text-3xl md:text-4xl font-semibold tracking-tight text-slate-900 leading-tight">
-         {post.title}
-       </h2>
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 rounded-full bg-gradient-to-br from-pink-200 to-orange-200 flex items-center justify-center text-sm font-semibold text-slate-700 uppercase">
+            {post.author?.username?.charAt(0)}
+          </div>
 
-       
-       <p className="mt-4 text-lg leading-8 text-slate-600 line-clamp-3">
-         {post.content}
-       </p>
+          <div>
+            <p className="text-sm font-medium text-slate-800">
+              {post.author?.username}
+            </p>
 
-       
-       <div className="mt-6 flex items-center gap-3">
-         <button
-           onClick={handleEdit}
-           className="text-sm text-slate-700 hover:text-black transition"
-         >
-           Edit
-         </button>
+            <p className="text-xs text-slate-500">
+              {new Date(post.createdAt).toLocaleDateString()}
+            </p>
+          </div>
+        </div>
 
-         <button
-           onClick={handleDelete}
-           disabled={loading}
-           className="text-sm text-red-500 hover:text-red-600 transition"
-         >
-           {loading ? "Deleting..." : "Delete"}
-         </button>
-       </div>
-     </div>
-   </article>
- );
+        
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleEdit}
+            className="px-4 py-2 rounded-full bg-slate-100 text-sm text-slate-700 hover:bg-slate-200 transition"
+          >
+            Edit
+          </button>
+
+          <button
+            onClick={handleDelete}
+            disabled={loading}
+            className="px-4 py-2 rounded-full bg-red-50 text-sm text-red-500 hover:bg-red-100 transition"
+          >
+            {loading ? "Deleting..." : "Delete"}
+          </button>
+        </div>
+      </div>
+      <h2 className="mt-8 text-3xl md:text-4xl font-semibold tracking-tight text-slate-900 leading-tight">
+        {post.title}
+      </h2>
+
+      <p className="mt-5 text-[17px] leading-8 text-slate-600 line-clamp-3">
+        {post.content}
+      </p>
+
+    </div>
+  </article>
+);
 }
 
 export default PostCard;
