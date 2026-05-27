@@ -8,7 +8,7 @@ function PostsPage() {
 
   if (isLoading) {
     return (
-      <div className="w-full relative min-h-screen bg-[#f9f6f2] pt-80 px-4">
+      <div className="w-full relative min-h-screen bg-[#f9f6f2] pt-44 px-4">
         <div className="text-slate-500 animate-pulse">Loading posts...</div>
       </div>
     );
@@ -18,7 +18,7 @@ function PostsPage() {
     <div className="w-full min-h-screen bg-[#f9f6f2] py-14 px-4">
       <div className="max-w-5xl mx-auto space-y-6">
         
-        <div className="text-center mb-10">
+        <div className="text-center mb-10 pt-20">
           <h1 className="text-3xl md:text-4xl font-bold text-slate-800">
             Latest Posts
           </h1>
