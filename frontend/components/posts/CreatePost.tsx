@@ -57,8 +57,8 @@ function CreatePost() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-slate-50 flex items-center justify-center px-4">
-      <Card className="w-full max-w-2xl bg-white shadow-sm rounded-xl">
+    <div className="w-full min-h-screen bg-[#f9f6f2] flex items-center justify-center px-4">
+      <Card className="w-full max-w-2xl bg-white/80 backdrop-blur-xl shadow-sm rounded-xl">
         <CardHeader>
           <CardTitle className="text-2xl font-semibold">
             Create New Post
@@ -81,17 +81,17 @@ function CreatePost() {
               value={content}
               onChange={(e) => setContent(e.target.value)}
               required
-              className="min-h-[150px]"
+              className="min-h-37.5"
             />
 
-            {/* Image URL */}
+           
             <Input
               placeholder="Image URL (optional)"
               value={image}
               onChange={(e) => setImage(e.target.value)}
             />
 
-            {/* Error */}
+            
             {error && (
               <p className="text-sm text-red-500 bg-red-50 p-2 rounded-md">
                 {error}
@@ -100,7 +100,11 @@ function CreatePost() {
           </CardContent>
 
           <CardFooter className="flex justify-end">
-            <Button type="submit" disabled={loading} className="cursior-pointer">
+            <Button
+              type="submit"
+              disabled={loading}
+              className="cursior-pointer"
+            >
               {loading ? "Creating..." : "Create Post"}
             </Button>
           </CardFooter>

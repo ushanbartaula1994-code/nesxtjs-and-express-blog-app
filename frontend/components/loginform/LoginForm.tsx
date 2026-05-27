@@ -47,7 +47,7 @@ function LoginForm() {
   };
 
   return (
-    <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 px-4">
+    <div className="w-full min-h-screen flex items-center justify-center bg-[#f9f6f2]">
       <Card className="w-full max-w-md bg-white/80 backdrop-blur-md border border-slate-200 shadow-xl rounded-2xl">
         <CardHeader className="text-center space-y-2">
           <CardTitle className="text-2xl font-bold text-slate-800">

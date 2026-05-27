@@ -93,7 +93,7 @@ function Navbar() {
                 <AlertDialogTrigger asChild>
                   <Button
                     variant="outline"
-                    className="rounded-full border-slate-200 text-slate-700 hover:bg-slate-100"
+                    className="rounded-full cursor-pointer border-slate-200 text-slate-700 hover:bg-slate-100"
                   >
                     Logout
                   </Button>
