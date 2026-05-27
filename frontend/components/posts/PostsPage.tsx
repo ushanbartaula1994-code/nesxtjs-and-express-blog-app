@@ -8,7 +8,7 @@ function PostsPage() {
 
   if (isLoading) {
     return (
-      <div className="w-full relative min-h-screen bg-[#f9f6f2] top-36 px-4">
+      <div className="w-full relative min-h-screen bg-[#f9f6f2] pt-80 px-4">
         <div className="text-slate-500 animate-pulse">Loading posts...</div>
       </div>
     );
