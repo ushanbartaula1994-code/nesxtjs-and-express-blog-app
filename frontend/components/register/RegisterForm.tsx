@@ -12,7 +12,7 @@ function RegisterForm() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fullname, setFullname] = useState(""); // ✅ FIX ADDED
+  const [fullname, setFullname] = useState(""); 
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -30,7 +30,7 @@ function RegisterForm() {
         username,
         email,
         password,
-        fullname, // ✅ FIX ADDED
+        fullname, // 
       });
 
       router.push("/login");
@@ -50,7 +50,7 @@ function RegisterForm() {
 
         <CardContent>
           <form onSubmit={onSubmit} className="space-y-4">
-            {/* Full Name */}
+            
             <div className="space-y-2">
               <Label>Full Name</Label>
               <Input
@@ -96,7 +96,7 @@ function RegisterForm() {
               />
             </div>
 
-            {/* Error */}
+            
             {error && (
               <p className="text-sm text-red-500 bg-red-50 p-2 rounded-md">
                 {error}
