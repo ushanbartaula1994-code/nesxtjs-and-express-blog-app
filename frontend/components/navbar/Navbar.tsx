@@ -56,7 +56,7 @@ function Navbar() {
             <>
               <Link
                 href="/posts"
-                className={`px-4 py-2 rounded-full text-sm  transition ${isActive('/posts')?"bg-white/80 text-slate-900 shadow-sm":" text-slate-600 hover:text-slate-900 hover:bg-white/60"}`}
+                className={`px-4 py-2 rounded-full text-sm  transition ${isActive("/posts") ? "bg-white/80 text-slate-900 shadow-sm" : " text-slate-600 hover:text-slate-900 hover:bg-white/60"}`}
               >
                 Posts
               </Link>
@@ -93,7 +93,12 @@ function Navbar() {
                 <AlertDialogTrigger asChild>
                   <Button
                     variant="outline"
-                    className="rounded-full cursor-pointer border-slate-200 text-slate-700 hover:bg-slate-100"
+                    className=" px-4 py-2 rounded-full
+  text-slate-700 text-sm font-medium
+  cursor-pointer
+  bg-gradient-to-r from-rose-100 via-pink-100 to-orange-100
+  hover:from-rose-200 hover:via-pink-200 hover:to-orange-200
+  transition"
                   >
                     Logout
                   </Button>
