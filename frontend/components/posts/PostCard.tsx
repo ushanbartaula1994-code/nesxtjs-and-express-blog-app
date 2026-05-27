@@ -39,24 +39,36 @@ function PostCard({ post }: PostCardProps) {
 
  
   return (
-  <article className="rounded-[32px] border border-[#ebe5dd] bg-white/80 overflow-hidden transition hover:shadow-[0_10px_40px_rgba(0,0,0,0.06)]">
-
-    
-    {post.image && (
-      <div className="relative w-full h-80 overflow-hidden">
-        <Image
-          src={post.image}
-          alt={post.title}
-          fill
-          className="object-cover"
-        />
+    <article className="rounded-[32px] border border-[#ebe5dd] bg-white/80 overflow-hidden transition hover:shadow-[0_10px_40px_rgba(0,0,0,0.05)]">
+      {/* TITLE */}
+      <div className="px-8 pt-8 md:px-10 md:pt-10">
+        <h2 className="text-3xl md:text-[38px] font-semibold tracking-[-0.03em] leading-[1.1] text-slate-900">
+          {post.title}
+        </h2>
       </div>
-    )}
-    <div className="p-8 md:p-10">
 
-     
-      <div className="flex items-center justify-between flex-wrap gap-4">
+      {/* IMAGE */}
+      {post.image && (
+        <div className="relative w-full h-80 mt-7 overflow-hidden">
+          <Image
+            src={post.image}
+            alt={post.title}
+            fill
+            className="object-cover"
+          />
+        </div>
+      )}
 
+      {/* CONTENT */}
+      <div className="px-8 pt-7 md:px-10">
+        <p className="text-[16px] md:text-[17px] leading-8 text-slate-600 line-clamp-3">
+          {post.content}
+        </p>
+      </div>
+
+      {/* FOOTER */}
+      <div className="px-8 py-8 md:px-10 flex items-center justify-between flex-wrap gap-5">
+        {/* AUTHOR */}
         <div className="flex items-center gap-3">
           <div className="w-11 h-11 rounded-full bg-gradient-to-br from-pink-200 to-orange-200 flex items-center justify-center text-sm font-semibold text-slate-700 uppercase">
             {post.author?.username?.charAt(0)}
@@ -67,17 +79,17 @@ function PostCard({ post }: PostCardProps) {
               {post.author?.username}
             </p>
 
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 mt-0.5">
               {new Date(post.createdAt).toLocaleDateString()}
             </p>
           </div>
         </div>
 
-        
-        <div className="flex items-center gap-2">
+        {/* ACTIONS */}
+        <div className="flex items-center gap-3">
           <button
             onClick={handleEdit}
-            className="px-4 py-2 rounded-full bg-slate-100 text-sm text-slate-700 hover:bg-slate-200 transition"
+            className="px-5 py-2.5 rounded-full bg-slate-100 text-sm font-medium text-slate-700 hover:bg-slate-200 transition"
           >
             Edit
           </button>
@@ -85,23 +97,14 @@ function PostCard({ post }: PostCardProps) {
           <button
             onClick={handleDelete}
             disabled={loading}
-            className="px-4 py-2 rounded-full bg-red-50 text-sm text-red-500 hover:bg-red-100 transition"
+            className="px-5 py-2.5 rounded-full bg-red-50 text-sm font-medium text-red-500 hover:bg-red-100 transition"
           >
             {loading ? "Deleting..." : "Delete"}
           </button>
         </div>
       </div>
-      <h2 className="mt-8 text-3xl md:text-4xl font-semibold tracking-tight text-slate-900 leading-tight">
-        {post.title}
-      </h2>
-
-      <p className="mt-5 text-[17px] leading-8 text-slate-600 line-clamp-3">
-        {post.content}
-      </p>
-
-    </div>
-  </article>
-);
+    </article>
+  );
 }
 
 export default PostCard;
