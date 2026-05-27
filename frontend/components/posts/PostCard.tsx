@@ -39,7 +39,7 @@ function PostCard({ post }: PostCardProps) {
 
  
   return (
-    <article className="rounded-[32px] border border-[#ebe5dd] bg-white/80 overflow-hidden transition hover:shadow-[0_10px_40px_rgba(0,0,0,0.05)]">
+    <article className="rounded-[32px] border border-[#ebe5dd] bg-white/80 overflow-hidden transition hover:shadow-[0_10px_40px_rgba(0,0,0,0.05)] hover:scale-[0.5] cursor-pointer">
       {/* TITLE */}
       <div className="px-8 pt-8 md:px-10 md:pt-10">
         <h2 className="text-3xl md:text-[38px] font-semibold tracking-[-0.03em] leading-[1.1] text-slate-900">
@@ -47,9 +47,8 @@ function PostCard({ post }: PostCardProps) {
         </h2>
       </div>
 
-      {/* IMAGE */}
       {post.image && (
-        <div className="relative w-full h-80 mt-7 overflow-hidden">
+        <div className="relative w-full h-80 mt-7 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.01] hover:shadow-lg cursor-pointer overflow-hidden">
           <Image
             src={post.image}
             alt={post.title}
@@ -59,7 +58,6 @@ function PostCard({ post }: PostCardProps) {
         </div>
       )}
 
-      {/* CONTENT */}
       <div className="px-8 pt-7 md:px-10">
         <p className="text-[16px] md:text-[17px] leading-8 text-slate-600 line-clamp-3">
           {post.content}
