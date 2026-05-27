@@ -8,19 +8,36 @@ function PostsPage() {
 
   if (isLoading) {
     return (
-      <div className="w-full min-h-screen flex items-center justify-center">
-        Loading posts...
+      <div className="w-full min-h-screen flex items-center justify-center bg-[#f9f6f2]">
+        <div className="text-slate-500 animate-pulse">Loading posts...</div>
       </div>
     );
   }
 
   return (
-    <div className="w-full min-h-screen bg-slate-50 py-10 px-4">
-      <div className="max-w-3xl mx-auto space-y-6">
+    <div className="w-full min-h-screen bg-[#f9f6f2] py-14 px-4">
+      <div className="max-w-5xl mx-auto space-y-6">
+        
+        <div className="text-center mb-10">
+          <h1 className="text-3xl md:text-4xl font-bold text-slate-800">
+            Latest Posts
+          </h1>
+          <p className="text-slate-500 mt-2">
+            Discover thoughts, stories, and ideas
+          </p>
+        </div>
+
+        
         {posts.length === 0 ? (
-          <p className="text-center text-slate-500">No posts available</p>
+          <div className="text-center text-slate-500 py-20">
+            No posts available
+          </div>
         ) : (
-          posts.map((post) => <PostCard key={post._id} post={post} />)
+          <div className="space-y-6">
+            {posts.map((post) => (
+              <PostCard key={post._id} post={post} />
+            ))}
+          </div>
         )}
       </div>
     </div>

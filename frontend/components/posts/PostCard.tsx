@@ -6,15 +6,6 @@ import API from "@/lib/api";
 import { usePosts } from "@/app/context/postContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
 import { Button } from "@/components/ui/button";
 
 type PostCardProps = {
@@ -24,21 +15,18 @@ type PostCardProps = {
 function PostCard({ post }: PostCardProps) {
   const { refreshPosts } = usePosts();
   const router = useRouter();
-
   const [loading, setLoading] = useState(false);
 
   const handleDelete = async () => {
-    const ok = confirm("Do you want to delete this post?");
+    const ok = confirm("Delete this post?");
     if (!ok) return;
 
     try {
       setLoading(true);
-
       await API.delete(`/api/v1/posts/${post._id}`);
-
       await refreshPosts();
     } catch (err) {
-      console.log("Delete failed:", err);
+      console.log(err);
       alert("Failed to delete post");
     } finally {
       setLoading(false);
@@ -50,63 +38,62 @@ function PostCard({ post }: PostCardProps) {
   };
 
   return (
-    <Card className="bg-white rounded-xl shadow-sm hover:shadow-md transition">
-      {/* Title */}
-      <CardHeader>
-        <CardTitle className="text-xl">{post.title}</CardTitle>
-      </CardHeader>
-
-      {/* Content */}
-      <CardContent>
-        {post.image && (
+    <div className="group bg-white/70 backdrop-blur-xl border border-slate-200/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition">
+     
+      {post.image && (
+        <div className="relative w-full h-56 overflow-hidden">
           <Image
             src={post.image}
             alt={post.title}
-            width={800}
-            height={400}
-            className="w-full h-52 object-cover rounded-lg"
+            fill
+            className="object-cover group-hover:scale-105 transition duration-500"
           />
-        )}
-
-        <p className="text-sm text-slate-600 mt-3 line-clamp-3">
-          {post.content}
-        </p>
-      </CardContent>
-
-      {/* Footer */}
-      <CardFooter className="flex justify-between items-center text-xs text-slate-500">
-        <div className="flex flex-col">
-          <span className="font-medium">{post.author?.username}</span>
-          <span>{new Date(post.createdAt).toLocaleDateString()}</span>
         </div>
+      )}
 
-        {/* Actions */}
-        <div className="flex gap-2">
-          {/* Edit */}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleEdit}
-            type="button"
-            className="cursor-pointer"
-          >
-            Edit
-          </Button>
+     
+      <div className="p-5 space-y-3">
+     
+        <h2 className="text-lg md:text-xl font-semibold text-slate-800 leading-snug">
+          {post.title}
+        </h2>
 
-          {/* Delete */}
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={handleDelete}
-            disabled={loading}
-            type="button"
-            className="cursor-pointer"
-          >
-            {loading ? "Deleting..." : "Delete"}
-          </Button>
+       
+        <p className="text-sm text-slate-600 line-clamp-3">{post.content}</p>
+
+        <div className="flex items-center justify-between pt-4">
+         
+          <div className="text-xs text-slate-500">
+            <p className="font-medium text-slate-700">
+              {post.author?.username}
+            </p>
+            <p>{new Date(post.createdAt).toLocaleDateString()}</p>
+          </div>
+
+          
+          <div className="flex gap-2 opacity-80 group-hover:opacity-100 transition">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleEdit}
+              className="rounded-full"
+            >
+              Edit
+            </Button>
+
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleDelete}
+              disabled={loading}
+              className="rounded-full"
+            >
+              {loading ? "..." : "Delete"}
+            </Button>
+          </div>
         </div>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 }
 
