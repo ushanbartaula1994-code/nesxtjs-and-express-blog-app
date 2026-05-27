@@ -41,7 +41,7 @@ function PostCard({ post }: PostCardProps) {
   return (
   <article className="rounded-[32px] border border-[#ebe5dd] bg-white/80 overflow-hidden transition hover:shadow-[0_10px_40px_rgba(0,0,0,0.06)]">
 
-    {/* IMAGE */}
+    
     {post.image && (
       <div className="relative w-full h-80 overflow-hidden">
         <Image

@@ -16,7 +16,7 @@ function PostsPage() {
 
   return (
     <div className="w-full min-h-screen bg-[#f9f6f2] py-14 px-4">
-      <div className="max-w-5xl mx-auto space-y-6">
+      <div className="max-w-3xl mx-auto space-y-6">
         
         <div className="text-center mb-10 pt-20">
           <h1 className="text-3xl md:text-4xl font-bold text-slate-800">
