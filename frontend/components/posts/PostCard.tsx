@@ -51,7 +51,7 @@ function PostCard({ post }: PostCardProps) {
     >
      
       <div className="px-7 pt-7 md:px-10 md:pt-10">
-        <h2 className="text-2xl md:text-3xl font-semibold tracking-[-0.02em] leading-tight text-slate-900">
+        <h2 className="text-xl md:text-xl font-semibold tracking leading-tight text-slate-900">
           {post.title}
         </h2>
       </div>
