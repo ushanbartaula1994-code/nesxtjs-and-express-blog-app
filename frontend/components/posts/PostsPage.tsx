@@ -14,13 +14,13 @@ export default async function PostsPage() {
   const remainingPosts = posts?.length ? posts.slice(1) : [];
 
   return (
-    <div className="w-full min-h-screen bg-[#f9f6f2] py-14 px-4">
+    <main className="w-full min-h-screen bg-[#f9f6f2] py-14 px-4">
       <div className="max-w-3xl mx-auto space-y-6">
         <div className="text-center mb-10 pt-20 min-h-30">
           <h1 className="text-3xl md:text-4xl font-bold text-slate-800">
             Latest Posts
           </h1>
-          <p className="text-slate-500 mt-2">
+          <p className="text-slate-700 mt-2">
             Discover thoughts, stories, and ideas
           </p>
         </div>
@@ -33,6 +33,6 @@ export default async function PostsPage() {
           ))}
         </div>
       </div>
-    </div>
+    </main>
   );
 }
