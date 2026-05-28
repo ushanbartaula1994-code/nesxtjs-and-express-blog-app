@@ -79,7 +79,7 @@ function PostCard({ post }: PostCardProps) {
        
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-200 to-orange-200 flex items-center justify-center text-sm font-semibold text-slate-700 uppercase">
-            {post.author?.username?.charAt(0)}
+            {post.author?.username?.charAt(0)||"?"}
           </div>
 
           <div>

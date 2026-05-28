@@ -1,6 +1,5 @@
 "use client";
 
-// import {useEffect} from 'react'
 import { useAuth } from "@/app/context/authContext";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -20,15 +19,14 @@ import {
 
 function Navbar() {
   const { isLoading, isAuthenticated, logOut, logIn, user } = useAuth();
-  //  useEffect(() => {
-  //    console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
-  //  }, []);
-   const pathname = usePathname();
-   const isActive = (path: string) => pathname === path;
+  const pathname = usePathname();
+
+  const isActive = (path: string) => pathname === path;
 
   return (
     <nav className="fixed top-5 left-0 right-0 z-50 flex justify-center">
       <div className="w-full max-w-6xl mx-4 px-6 py-3 flex items-center justify-between rounded-2xl bg-[#f9f6f2]/70 border border-slate-200/60 backdrop-blur-xl shadow-xl">
+        {/* LEFT */}
         <Link href="/" className="flex items-center gap-3">
           <Image
             src="/logo.jpg"
@@ -42,11 +40,12 @@ function Navbar() {
           </span>
         </Link>
 
+        {/* CENTER NAV */}
         <div className="hidden md:flex items-center gap-8 text-sm text-slate-600">
           {!isAuthenticated && (
             <Link
               href="/"
-              className="px-4 py-2 rounded-full text-sm text-slate-600 hover:text-slate-900 hover:bg-white/60 transition cursor-pointer"
+              className="px-4 py-2 rounded-full hover:text-slate-900 hover:bg-white/60 transition"
             >
               Home
             </Link>
@@ -56,14 +55,22 @@ function Navbar() {
             <>
               <Link
                 href="/posts"
-                className={`px-4 py-2 rounded-full text-sm  transition ${isActive("/posts") ? "bg-white/80 text-slate-900 shadow-sm" : " text-slate-600 hover:text-slate-900 hover:bg-white/60"}`}
+                className={`px-4 py-2 rounded-full transition ${
+                  isActive("/posts")
+                    ? "bg-white/80 text-slate-900 shadow-sm"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
+                }`}
               >
                 Posts
               </Link>
 
               <Link
                 href="/createpost"
-                className={`px-4 py-2 rounded-full text-sm transition ${isActive("/createpost") ? "bg-white/80 text-slate-900 shadow-sm" : " text-slate-600 hover:text-slate-900 hover:bg-white/60"} `}
+                className={`px-4 py-2 rounded-full transition ${
+                  isActive("/createpost")
+                    ? "bg-white/80 text-slate-900 shadow-sm"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
+                }`}
               >
                 Create Post
               </Link>
@@ -73,32 +80,31 @@ function Navbar() {
           {!isAuthenticated && (
             <Link
               href="/register"
-              className="px-4 py-2 rounded-full text-sm text-slate-600 hover:text-slate-900 hover:bg-white/60 transition"
+              className="px-4 py-2 rounded-full hover:text-slate-900 hover:bg-white/60 transition"
             >
               Register
             </Link>
           )}
         </div>
 
-        <div className="flex items-center gap-3">
+        {/* RIGHT - FIXED (NO CLS) */}
+        <div className="flex items-center gap-3 min-w-[220px] justify-end">
+          {/* LOADING */}
           {isLoading ? (
-            <span className="text-sm text-slate-500">Loading...</span>
+            <div className="h-8 w-20 bg-slate-200 animate-pulse rounded-full" />
           ) : isAuthenticated ? (
-            <div className="flex items-center gap-3">
-              <span className="hidden sm:block text-xs px-3 py-1 rounded-full bg-white/60 border border-slate-200 text-slate-700">
-                {user?.fullname}
+            <>
+              {/* USERNAME */}
+              <span className="hidden sm:block text-xs px-3 py-1 rounded-full bg-white/60 border border-slate-200 text-slate-700 min-w-[80px] text-center">
+                {user?.fullname || ""}
               </span>
 
+              {/* LOGOUT */}
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button
                     variant="outline"
-                    className=" px-4 py-2 rounded-full
-  text-slate-700 text-sm font-medium
-  cursor-pointer
-  bg-gradient-to-r from-rose-100 via-pink-100 to-orange-100
-  hover:from-rose-200 hover:via-pink-200 hover:to-orange-200
-  transition"
+                    className="px-4 py-2 rounded-full text-slate-700 text-sm font-medium cursor-pointer bg-gradient-to-r from-rose-100 via-pink-100 to-orange-100 hover:from-rose-200 hover:via-pink-200 hover:to-orange-200 transition"
                   >
                     Logout
                   </Button>
@@ -123,7 +129,7 @@ function Navbar() {
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
-            </div>
+            </>
           ) : (
             <>
               <Button
