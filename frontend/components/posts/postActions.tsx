@@ -8,6 +8,7 @@ import { useState } from "react";
 export default function PostActions({ postId }: { postId: string }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  console.log("POST ID IN ACTIONS:", postId, typeof postId);
 
   const handleDelete = async () => {
     if (!confirm("Delete this post?")) return;
