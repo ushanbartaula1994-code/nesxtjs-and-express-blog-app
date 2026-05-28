@@ -7,7 +7,8 @@ export default async function PostsPage() {
     next: { revalidate: 60 },
   });
 
-  const posts:Post[] = await res.json();
+  const result = await res.json();
+  const posts:Post[]=result?.data ??[]
 
   const firstPost = posts?.length ? posts[0] : null;
   const remainingPosts = posts?.length ? posts.slice(1) : [];
