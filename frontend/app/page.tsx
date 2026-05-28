@@ -29,8 +29,8 @@
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#f9f6f2]">
-      <div className="absolute top-[100px] left-[-100px] w-[400px] h-[400px] bg-pink-200/40 blur-3xl rounded-full" />
-      <div className="absolute bottom-[-100px] right-[-100px] w-[400px] h-[400px] bg-orange-200/40  blur-3xl rounded-full" />
+      <div className="absolute top-25 -left-25 w-100 h-100 bg-pink-200/40 blur-3xl rounded-full" />
+      <div className="absolute -bottom-25 -right-25 w-100 h-100 bg-orange-200/40  blur-3xl rounded-full" />
       <div className="relative max-w-6xl mx-auto px-6">
         <section className="flex flex-col items-center text-center mt-40 md:mt-48">
           <p className="px-4 py-1.5 rounded-full bg-gradient-to-r from-pink-100 to-orange-100 text-slate-700 text-xs md:text-sm">

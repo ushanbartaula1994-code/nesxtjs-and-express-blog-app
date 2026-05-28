@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect} from 'react'
+// import {useEffect} from 'react'
 import { useAuth } from "@/app/context/authContext";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -20,9 +20,9 @@ import {
 
 function Navbar() {
   const { isLoading, isAuthenticated, logOut, logIn, user } = useAuth();
-   useEffect(() => {
-     console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
-   }, []);
+  //  useEffect(() => {
+  //    console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
+  //  }, []);
    const pathname = usePathname();
    const isActive = (path: string) => pathname === path;
 
@@ -63,7 +63,7 @@ function Navbar() {
 
               <Link
                 href="/createpost"
-                className="px-4 py-2 rounded-full text-sm text-slate-600 hover:text-slate-900 hover:bg-white/60 transition"
+                className={`px-4 py-2 rounded-full text-sm transition ${isActive("/createpost") ? "bg-white/80 text-slate-900 shadow-sm" : " text-slate-600 hover:text-slate-900 hover:bg-white/60"} `}
               >
                 Create Post
               </Link>
