@@ -103,7 +103,7 @@ function CreatePost() {
             <Button
               type="submit"
               disabled={loading}
-              className="cursior-pointer"
+              className="cursor-pointer"
             >
               {loading ? "Creating..." : "Create Post"}
             </Button>
