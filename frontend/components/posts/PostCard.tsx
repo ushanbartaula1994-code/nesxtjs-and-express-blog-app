@@ -1,18 +1,12 @@
 import Image from "next/image";
-import dynamic from "next/dynamic";
+import PostActions from "@/components/posts/postActions";
 import type { Post } from "@/types/types";
-
-const PostActions = dynamic(() => import("@/components/posts/postActions"), {
-  ssr: false,
-});
 
 type Props = {
   post: Post;
 };
 
 export default function PostCard({ post }: Props) {
-  console.log("POST CARD ID:", post._id, typeof post._id);
-
   return (
     <article className="rounded-xl bg-white p-4 border">
       <h2>{post.title}</h2>
