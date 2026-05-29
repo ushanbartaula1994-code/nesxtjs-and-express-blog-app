@@ -52,7 +52,7 @@ export default function SinglePostPage() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-slate-50 flex justify-center p-6">
+    <div className="w-full min-h-screen bg-slate-50 flex justify-center pt-40 p-6">
       <Card className="w-full max-w-3xl bg-white shadow-sm">
         <CardHeader>
           <CardTitle className="text-3xl">{post.title}</CardTitle>
