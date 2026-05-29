@@ -13,7 +13,7 @@ export default function PostCardLink({ children, postId }: Props) {
 
   return (
     <div
-      onDoubleClick={() => router.push(`/posts/${postId}`)}
+      onClick={() => router.push(`/posts/${postId}`)}
       className="cursor-pointer"
     >
       {children}
