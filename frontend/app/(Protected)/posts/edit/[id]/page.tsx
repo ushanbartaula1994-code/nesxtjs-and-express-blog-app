@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
 function EditPostPage() {
+  console.log("EDIT PAGE LOADED");
   const params = useParams();
   const router = useRouter();
 
