@@ -14,7 +14,8 @@ export default async function SinglePostPage({ params }: Props) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/v1/posts/${id}`,
     {
-      next: { revalidate: 60 },
+      cache: "no-store",
+      credentials: "include",
     },
   );
 
