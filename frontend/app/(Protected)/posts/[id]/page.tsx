@@ -19,6 +19,8 @@ export default async function SinglePostPage({ params }: Props) {
     },
   );
 
+  console.log("STATUS:", res.status);
+  console.log("OK:", res.ok);
   if (!res.ok) {
     return (
       <div className="w-full min-h-screen flex items-center justify-center">
