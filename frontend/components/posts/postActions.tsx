@@ -3,21 +3,32 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-
 export default function PostActions({ postId }: { postId: string }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+
+  console.log("DELETE ID:", postId);
 
   const handleDelete = async () => {
     if (!confirm("Delete this post?")) return;
 
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/posts/${postId}`, {
-        method: "DELETE",
-      });
-        router.refresh();
+      setLoading(true);
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/posts/${postId}`,
+        {
+          method: "DELETE",
+        },
+      );
+
+      if (!res.ok) {
+        throw new Error("Delete failed");
+      }
+
+      router.refresh();
     } catch (err) {
-        console.log(err)
+      console.log(err);
       alert("Failed to delete post. Please try again.");
     } finally {
       setLoading(false);
@@ -27,7 +38,6 @@ export default function PostActions({ postId }: { postId: string }) {
   return (
     <div className="flex gap-2 mt-4">
       <button
-      disabled={loading}
         onClick={() => router.push(`/posts/edit/${postId}`)}
         className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
       >
