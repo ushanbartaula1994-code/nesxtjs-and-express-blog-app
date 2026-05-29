@@ -1,15 +1,15 @@
 import Image from "next/image";
 import PostActions from "@/components/posts/postActions";
 import type { Post } from "@/types/types";
-import  PostCardLink from "@/components/posts/PostCardLink";
+import Link from "next/link";
 type Props = {
   post: Post;
 };
 
 export default function PostCard({ post }: Props) {
   return (
-    <PostCardLink postId={post._id}>
-      <article className="rounded-xl bg-white p-4 border">
+    <Link href={`/posts/${post._id}`}>
+      <article className="rounded-xl bg-white p-4 border cursor-pointer transition hover:scale-[1.01] hover:shadow-lg">
         <h2>{post.title}</h2>
 
         {post.image && (
@@ -20,6 +20,6 @@ export default function PostCard({ post }: Props) {
 
         <PostActions postId={post._id} />
       </article>
-    </PostCardLink>
+    </Link>
   );
 }
