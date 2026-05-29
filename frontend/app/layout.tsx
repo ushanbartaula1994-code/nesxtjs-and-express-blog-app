@@ -33,11 +33,9 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <AuthProvider>
-          <PostProvider>
-            <Navbar />
-            {children}
-          </PostProvider>
+          <PostProvider>{children}</PostProvider>
         </AuthProvider>
+        <Navbar />
       </body>
     </html>
   );

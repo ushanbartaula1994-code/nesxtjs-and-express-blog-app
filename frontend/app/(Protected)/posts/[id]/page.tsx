@@ -3,18 +3,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Post } from "@/types/types";
 
 type Props = {
-  params: Promise<{
+  params: {
     id: string;
-  }>;
+  };
 };
 
-async function SinglePostPage({ params }: Props) {
-  const { id } = await params;
+export default async function SinglePostPage({ params }: Props) {
+  const { id } =  params;
 
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/v1/posts/${id}`,
     {
-      cache: "no-store",
+      next: { revalidate: 60 },
     },
   );
 
@@ -43,6 +43,7 @@ async function SinglePostPage({ params }: Props) {
               alt={post.title}
               width={900}
               height={500}
+              priority
               className="w-full rounded-lg object-cover"
             />
           )}
@@ -62,7 +63,7 @@ async function SinglePostPage({ params }: Props) {
   );
 }
 
-export default SinglePostPage;
+
 
 // "use client";
 

@@ -8,21 +8,19 @@ type Props = {
 
 export default function PostCard({ post }: Props) {
   return (
-    
-     <article className="rounded-xl bg-white p-4 border cursor-pointer">
-    <Link href={`/posts/${post._id}`}>
-      <div className="cursor-pointer transition hover:scale-[1.01] hover:shadow-lg">
-        <h2>{post.title}</h2>
+    <article className="rounded-xl bg-white p-4 border cursor-pointer transition hover:scale-[1.01] hover:shadow-lg">
+      <Link href={`/posts/${post._id}`}>
+        <div className="space-y-2">
+          <h2>{post.title}</h2>
 
-        {post.image && (
-          <Image src={post.image} alt={post.title} width={600} height={300} />
-        )}
+          {post.image && (
+            <Image src={post.image} alt={post.title} width={600} height={300} />
+          )}
 
-        <p>{post.content}</p>
+          <p>{post.content}</p>
         </div>
-        </Link>
-        <PostActions postId={post._id} />
-      </article>
-    
+      </Link>
+      <PostActions postId={post._id} />
+    </article>
   );
 }
