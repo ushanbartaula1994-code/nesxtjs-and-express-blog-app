@@ -9,6 +9,7 @@ type Props = {
 };
 
 export default async function SinglePostPage({ params }: Props) {
+   console.log("PAGE HIT:", params);
   const { id } =  params;
 
   const res = await fetch(
