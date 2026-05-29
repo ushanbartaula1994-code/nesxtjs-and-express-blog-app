@@ -8,8 +8,10 @@ type Props = {
 
 export default function PostCard({ post }: Props) {
   return (
+    
+     <article className="rounded-xl bg-white p-4 border cursor-pointer">
     <Link href={`/posts/${post._id}`}>
-      <article className="rounded-xl bg-white p-4 border cursor-pointer transition hover:scale-[1.01] hover:shadow-lg">
+      <div className="cursor-pointer transition hover:scale-[1.01] hover:shadow-lg">
         <h2>{post.title}</h2>
 
         {post.image && (
@@ -17,9 +19,10 @@ export default function PostCard({ post }: Props) {
         )}
 
         <p>{post.content}</p>
-
+        </div>
+        </Link>
         <PostActions postId={post._id} />
       </article>
-    </Link>
+    
   );
 }

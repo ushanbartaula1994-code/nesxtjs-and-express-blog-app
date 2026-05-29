@@ -60,7 +60,7 @@ function EditPostPage() {
 
       console.log("UPDATED:", { title, content, image });
 
-      // 🔥 CRITICAL FIXES
+    
       await refreshPosts(); // refresh context
       router.replace("/posts"); // go back
       router.refresh(); // force UI re-render
