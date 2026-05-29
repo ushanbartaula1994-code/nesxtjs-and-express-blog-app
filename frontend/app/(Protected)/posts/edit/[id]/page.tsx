@@ -3,20 +3,17 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import API from "@/lib/api";
-import { usePosts } from "@/app/context/postContext";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
-function EditPostPage() {
+export default function EditPostPage() {
   console.log("EDIT PAGE LOADED");
+
   const params = useParams();
   const router = useRouter();
-
-  const { refreshPosts } = usePosts(); // 🔥 IMPORTANT FIX
-
   const id = params.id as string;
 
   const [title, setTitle] = useState("");
@@ -61,10 +58,8 @@ function EditPostPage() {
 
       console.log("UPDATED:", { title, content, image });
 
-    
-      await refreshPosts(); // refresh context
-      router.replace("/posts"); // go back
-      router.refresh(); // force UI re-render
+      router.replace("/posts");
+      router.refresh();
     } catch (err) {
       console.log("Update failed", err);
       alert("Failed to update post");
@@ -119,5 +114,3 @@ function EditPostPage() {
     </div>
   );
 }
-
-export default EditPostPage;
