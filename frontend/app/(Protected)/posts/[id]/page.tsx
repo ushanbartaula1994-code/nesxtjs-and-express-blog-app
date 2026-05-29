@@ -28,6 +28,9 @@ export default async function SinglePostPage({ params }: Props) {
   }
 
   const data = await res.json();
+  console.log("api response:",data)
+  console.log("POST DATA:", data?.data);
+  console.log("DOUBLE NEST CHECK:", data?.data?.data);
   const post: Post = data.data;
 
   return (
