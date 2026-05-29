@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import API from "@/lib/api";
-import { usePosts } from "@/app/context/postContext";
 
 import {
   Card,
@@ -19,7 +18,6 @@ import { Textarea } from "@/components/ui/textarea";
 
 function CreatePost() {
   const router = useRouter();
-  const { refreshPosts } = usePosts();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -41,13 +39,12 @@ function CreatePost() {
         image: image || undefined,
       });
 
-      await refreshPosts();
-
       setTitle("");
       setContent("");
       setImage("");
 
       router.push("/posts");
+      router.refresh();
     } catch (err) {
       console.log(err);
       setError("Failed to create post");
@@ -67,7 +64,6 @@ function CreatePost() {
 
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
-            {/* Title */}
             <Input
               placeholder="Enter post title"
               value={title}
@@ -75,7 +71,6 @@ function CreatePost() {
               required
             />
 
-            {/* Content */}
             <Textarea
               placeholder="Write your post content..."
               value={content}
@@ -84,14 +79,12 @@ function CreatePost() {
               className="min-h-37.5"
             />
 
-           
             <Input
               placeholder="Image URL (optional)"
               value={image}
               onChange={(e) => setImage(e.target.value)}
             />
 
-            
             {error && (
               <p className="text-sm text-red-500 bg-red-50 p-2 rounded-md">
                 {error}
@@ -100,11 +93,7 @@ function CreatePost() {
           </CardContent>
 
           <CardFooter className="flex justify-end">
-            <Button
-              type="submit"
-              disabled={loading}
-              className="cursor-pointer"
-            >
+            <Button type="submit" disabled={loading}>
               {loading ? "Creating..." : "Create Post"}
             </Button>
           </CardFooter>
