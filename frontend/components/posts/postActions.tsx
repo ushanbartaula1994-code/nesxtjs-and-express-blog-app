@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import API from "@/lib/api";
 
 export default function PostActions({ postId }: { postId: string }) {
   const router = useRouter();
@@ -15,16 +16,7 @@ export default function PostActions({ postId }: { postId: string }) {
     try {
       setLoading(true);
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/posts/${postId}`,
-        {
-          method: "DELETE",
-        },
-      );
-
-      if (!res.ok) {
-        throw new Error("Delete failed");
-      }
+      await API.delete(`/api/v1/posts/${postId}`);
 
       router.refresh();
     } catch (err) {
@@ -49,7 +41,7 @@ export default function PostActions({ postId }: { postId: string }) {
         disabled={loading}
         className="px-3 py-1 bg-red-200 rounded disabled:opacity-50"
       >
-        {loading ? "..." : "Delete"}
+        {loading ? "Deleting..." : "Delete"}
       </button>
     </div>
   );
