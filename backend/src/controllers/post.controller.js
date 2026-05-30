@@ -70,7 +70,7 @@ export const updatePost = asyncHandler(async (req, res) => {
 console.log("REQ FILE:", req.file);
 console.log("REQ BODY:", req.body);
   const { id } = req.params;
-
+console.log("DEPLOY FIX UPDATE");
   const title = req.body?.title;
   const content = req.body?.content;
 
