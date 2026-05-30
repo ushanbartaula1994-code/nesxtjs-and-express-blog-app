@@ -24,7 +24,7 @@ app.use(
 // 3. Body parsers
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
-app.use("/uploads", express.static("uploads"));
+
 // 4. Cookies
 app.use(cookieParser());
 
