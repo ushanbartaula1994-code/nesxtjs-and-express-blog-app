@@ -3,19 +3,25 @@ import cloudinary from "../config/cloudinary.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import mongoose from "mongoose";
 
-// CREATE POST
+
+//   CREATE POST
+
 export const createPost = asyncHandler(async (req, res) => {
-  const title = req.body?.title;
-  const content = req.body?.content;
+  const { title, content } = req.body || {};
 
   if (!title || !content) {
     throw new ApiError(400, "Title and content are required");
   }
 
+  if (!req.user?._id) {
+    throw new ApiError(401, "Unauthorized");
+  }
+
   let imageUrl = null;
 
-  if (req.file) {
+  if (req.file?.buffer) {
     const base64 = req.file.buffer.toString("base64");
     const dataURI = `data:${req.file.mimetype};base64,${base64}`;
 
@@ -38,7 +44,9 @@ export const createPost = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, post, "Post created successfully"));
 });
 
-// GET ALL POSTS
+/* =========================================================
+   GET ALL POSTS
+========================================================= */
 export const getAllPosts = asyncHandler(async (req, res) => {
   const posts = await Post.find()
     .populate("author", "username email")
@@ -49,9 +57,15 @@ export const getAllPosts = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, posts, "Posts fetched successfully"));
 });
 
-// GET SINGLE POST
+/* =========================================================
+   GET SINGLE POST
+========================================================= */
 export const getPostsById = asyncHandler(async (req, res) => {
   const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new ApiError(400, "Invalid post id");
+  }
 
   const post = await Post.findById(id).populate("author", "username email");
 
@@ -64,15 +78,24 @@ export const getPostsById = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, post, "Post fetched successfully"));
 });
 
-// UPDATE POST
+/* =========================================================
+   UPDATE POST (FIXED - YOUR ISSUE WAS HERE)
+========================================================= */
 export const updatePost = asyncHandler(async (req, res) => {
-
-console.log("REQ FILE:", req.file);
-console.log("REQ BODY:", req.body);
   const { id } = req.params;
-console.log("DEPLOY FIX UPDATE");
-  const title = req.body?.title;
-  const content = req.body?.content;
+
+  console.log("UPDATE HIT");
+  console.log("BODY:", req.body);
+
+  // 1. Validate ID first (prevents Mongo crash)
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new ApiError(400, "Invalid post id");
+  }
+
+  // 2. Safe auth check (CRITICAL FIX FOR RAILWAY CRASH)
+  if (!req.user?._id) {
+    throw new ApiError(401, "Unauthorized");
+  }
 
   const post = await Post.findById(id);
 
@@ -80,15 +103,22 @@ console.log("DEPLOY FIX UPDATE");
     throw new ApiError(404, "Post not found");
   }
 
-  if (post.author.toString() !== req.user._id.toString()) {
-    throw new ApiError(403, "You are not allowed to perform this action");
+  // 3. Safe ownership check (prevents undefined crash)
+  if (!post.author) {
+    throw new ApiError(500, "Post author missing");
   }
+
+  if (post.author.toString() !== req.user._id.toString()) {
+    throw new ApiError(403, "Not allowed to update this post");
+  }
+
+  const { title, content } = req.body || {};
 
   if (title !== undefined) post.title = title;
   if (content !== undefined) post.content = content;
 
-  // CLOUDINARY IMAGE UPDATE
-  if (req.file) {
+  // 4. Image update (safe check)
+  if (req.file?.buffer) {
     const base64 = req.file.buffer.toString("base64");
     const dataURI = `data:${req.file.mimetype};base64,${base64}`;
 
@@ -106,9 +136,19 @@ console.log("DEPLOY FIX UPDATE");
     .json(new ApiResponse(200, post, "Post updated successfully"));
 });
 
-// DELETE POST
+/* =========================================================
+   DELETE POST
+========================================================= */
 export const deletePost = asyncHandler(async (req, res) => {
   const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new ApiError(400, "Invalid post id");
+  }
+
+  if (!req.user?._id) {
+    throw new ApiError(401, "Unauthorized");
+  }
 
   const post = await Post.findById(id);
 
@@ -117,7 +157,7 @@ export const deletePost = asyncHandler(async (req, res) => {
   }
 
   if (post.author.toString() !== req.user._id.toString()) {
-    throw new ApiError(403, "You are not allowed to delete this post");
+    throw new ApiError(403, "Not allowed to delete this post");
   }
 
   await post.deleteOne();
