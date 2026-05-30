@@ -67,7 +67,7 @@ export const getPostsById = asyncHandler(async (req, res) => {
 export const updatePost = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { title, content } = req.body;
-
+console.log("REQ FILE:", req.file);
   const post = await Post.findById(id);
 
   if (!post) {
