@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
 import type { Post } from "@/types/types";
+import { responseCookiesToRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
 interface EditPostFormProps {
   post: Post;
@@ -38,13 +39,16 @@ export default function EditPostForm({ post }: EditPostFormProps) {
       if (image) {
         formData.append("image", image);
       }
+       console.log("Sending request to:", `/api/v1/posts/${post._id}`);
 
-      await API.patch(`/api/v1/posts/${post._id}`, formData);
+     const response= await API.patch(`/api/v1/posts/${post._id}`, formData);
+     console.log("success",response.data)
 
       router.replace("/posts");
       router.refresh();
     } catch (error) {
       console.error("Update failed:", error);
+     
       alert("Failed to update post");
     } finally {
       setSaving(false);
