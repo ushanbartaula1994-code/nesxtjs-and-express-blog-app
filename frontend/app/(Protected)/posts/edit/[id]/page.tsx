@@ -1,13 +1,13 @@
 import EditForm from "@/components/editpage/EditForm";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function EditPostPage({ params }: PageProps) {
-  const { id } = params;
+  const { id } =await params;
 
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/v1/posts/${id}`,
