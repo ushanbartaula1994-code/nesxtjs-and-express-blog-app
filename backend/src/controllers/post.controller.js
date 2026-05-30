@@ -16,7 +16,7 @@ export const createPost = asyncHandler(async (req, res) => {
   const post = await Post.create({
     title,
     content,
-    image: req.file ? req.file.path : null, // multer file handling
+  image: req.file ? `/uploads/${req.file.filename}` : null, // multer file handling
     author: req.user._id,
   });
 
@@ -70,9 +70,9 @@ export const updatePost = asyncHandler(async (req, res) => {
   if (content !== undefined) post.content = content;
 
   // multer file handling
-  if (req.file) {
-    post.image = req.file.path;
-  }
+ if (req.file) {
+   post.image = `/uploads/${req.file.filename}`;
+ }
 
   await post.save();
 
