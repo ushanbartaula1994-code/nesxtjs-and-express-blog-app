@@ -66,8 +66,9 @@ export const getPostsById = asyncHandler(async (req, res) => {
 
 // UPDATE POST
 export const updatePost = asyncHandler(async (req, res) => {
-  console.log("REQ FILE:", req.file);
 
+console.log("REQ FILE:", req.file);
+console.log("REQ BODY:", req.body);
   const { id } = req.params;
 
   const title = req.body?.title;
