@@ -3,8 +3,7 @@ import type{Post} from "@/types/types"
 
 export default async function PostsPage() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/posts`, {
-    cache: "no-store",
-    next: { revalidate: 60 },
+    next: { revalidate: 0 },
   });
 
   const result = await res.json().catch(()=>null);
