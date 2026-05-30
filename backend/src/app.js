@@ -11,7 +11,8 @@ const app = express();
 // 1. CORS 
 app.use(
   cors({
-    origin: "https://nesxtjs-and-express-blog-app.vercel.app",
+    origin: [ "https://nesxtjs-and-express-blog-app.vercel.app",
+  "http://localhost:3000",],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -40,5 +41,12 @@ app.use((req, res) => {
     message: "Route not found",
   });
 });
+app.use((err, req, res, next) => {
+  console.error("GLOBAL ERROR:", err);
 
+  res.status(err.statusCode || 500).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+  });
+});
 export default app;
