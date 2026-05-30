@@ -6,7 +6,8 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 // CREATE POST
 export const createPost = asyncHandler(async (req, res) => {
-  const { title, content } = req.body;
+  const title = req.body?.title;
+  const content = req.body?.content;
 
   if (!title || !content) {
     throw new ApiError(400, "Title and content are required");
@@ -65,9 +66,13 @@ export const getPostsById = asyncHandler(async (req, res) => {
 
 // UPDATE POST
 export const updatePost = asyncHandler(async (req, res) => {
+  console.log("REQ FILE:", req.file);
+
   const { id } = req.params;
-  const { title, content } = req.body;
-console.log("REQ FILE:", req.file);
+
+  const title = req.body?.title;
+  const content = req.body?.content;
+
   const post = await Post.findById(id);
 
   if (!post) {
