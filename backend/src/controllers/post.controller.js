@@ -3,11 +3,12 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
-// CREATE POST
-export const createPost = asyncHandler(async (req, res) => {
-  const { title, content, image } = req.body;
 
-  // only required fields
+// CREATE POST
+
+export const createPost = asyncHandler(async (req, res) => {
+  const { title, content } = req.body;
+
   if (!title || !content) {
     throw new ApiError(400, "Title and content are required");
   }
@@ -15,7 +16,7 @@ export const createPost = asyncHandler(async (req, res) => {
   const post = await Post.create({
     title,
     content,
-    image: image || null, // optional field
+    image: req.file ? req.file.path : null, // multer file handling
     author: req.user._id,
   });
 
@@ -23,7 +24,6 @@ export const createPost = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(201, post, "Post created successfully"));
 });
-
 // GET ALL POSTS
 export const getAllPosts = asyncHandler(async (req, res) => {
   const posts = await Post.find()
@@ -34,12 +34,11 @@ export const getAllPosts = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, posts, "Posts fetched successfully"));
 });
-
 // GET SINGLE POST
 export const getPostsById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const post = await Post.findById(id).populate("author", "username email");
+  const post = await Post.findById(id).populate("author", "username email")
 
   if (!post) {
     throw new ApiError(404, "Post not found");
@@ -47,13 +46,13 @@ export const getPostsById = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, post, "Post fetched successfully"));
-});
+    .json(new ApiResponse(200, post, "Post fetched successfully"))
+})
 
 // UPDATE POST
 export const updatePost = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { title, content, image } = req.body;
+  const { title, content } = req.body;
 
   const post = await Post.findById(id);
 
@@ -65,9 +64,14 @@ export const updatePost = asyncHandler(async (req, res) => {
     throw new ApiError(403, "You are not allowed to perform this action");
   }
 
+  // update fields safely
   if (title !== undefined) post.title = title;
   if (content !== undefined) post.content = content;
-  if (image !== undefined) post.image = image; // important fix
+
+  // multer file handling
+  if (req.file) {
+    post.image = req.file.path;
+  }
 
   await post.save();
 
