@@ -1,5 +1,7 @@
+import { configureCloudinary } from "./config/cloudinary.js";
 import dotenv from "dotenv";
 dotenv.config();
+configureCloudinary();
 
 console.log("CORS:", process.env.CORS_ORIGIN);
 
@@ -15,3 +17,8 @@ connectDB()
     });
   })
   .catch(console.log);
+  console.log("CLOUDINARY ENV CHECK:", {
+    cloud: process.env.CLOUDINARY_CLOUD_NAME,
+    key: process.env.CLOUDINARY_API_KEY,
+    secret: process.env.CLOUDINARY_API_SECRET?.slice(-4),
+  });
