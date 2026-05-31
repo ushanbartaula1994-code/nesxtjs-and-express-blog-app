@@ -4,7 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js";
 import { registerSchema } from "../validations/Auth.validation.js";
-import { loginSchema } from "../validations/Auth.validation.js";
+import { loginSchema } from "../validations/Login.validation.js";
 
 // Register User
 
