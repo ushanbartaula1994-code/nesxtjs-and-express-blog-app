@@ -44,9 +44,8 @@ export const createPost = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, post, "Post created successfully"));
 });
 
-/* =========================================================
-   GET ALL POSTS
-========================================================= */
+   //GET ALL POSTS
+
 export const getAllPosts = asyncHandler(async (req, res) => {
   const posts = await Post.find()
     .populate("author", "username email")
@@ -57,9 +56,9 @@ export const getAllPosts = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, posts, "Posts fetched successfully"));
 });
 
-/* =========================================================
-   GET SINGLE POST
-========================================================= */
+
+   //GET SINGLE POST
+
 export const getPostsById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -78,21 +77,21 @@ export const getPostsById = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, post, "Post fetched successfully"));
 });
 
-/* =========================================================
-   UPDATE POST (FIXED - YOUR ISSUE WAS HERE)
-========================================================= */
+
+   //UPDATE POST 
+
 export const updatePost = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  console.log("UPDATE HIT");
-  console.log("BODY:", req.body);
+ console.log("USER:", req.user);
+ console.log("ID:", req.params.id);
 
-  // 1. Validate ID first (prevents Mongo crash)
+  // 1. Validating ID (prevents Mongo crash)
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new ApiError(400, "Invalid post id");
   }
 
-  // 2. Safe auth check (CRITICAL FIX FOR RAILWAY CRASH)
+  // 2. Safe auth check 
   if (!req.user?._id) {
     throw new ApiError(401, "Unauthorized");
   }
@@ -103,7 +102,7 @@ export const updatePost = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Post not found");
   }
 
-  // 3. Safe ownership check (prevents undefined crash)
+  // 3. Safe ownership check 
   if (!post.author) {
     throw new ApiError(500, "Post author missing");
   }
@@ -136,9 +135,9 @@ export const updatePost = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, post, "Post updated successfully"));
 });
 
-/* =========================================================
-   DELETE POST
-========================================================= */
+
+  // DELETE POST
+
 export const deletePost = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
