@@ -38,11 +38,24 @@ function LoginForm() {
       setPassword("");
 
       router.push("/posts");
-    } catch (error) {
+    } catch (error: unknown) {
       console.log(error);
-      setError("Invalid email or password");
-    } finally {
-      setIsLoading(false);
+
+      const err = error as {
+        response?: {
+          data?: {
+            message?: string;
+            error?: string;
+          };
+        };
+      };
+
+      const message =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        "Something went wrong";
+
+      setError(message);
     }
   };
 

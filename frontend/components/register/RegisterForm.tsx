@@ -18,28 +18,47 @@ function RegisterForm() {
   const [error, setError] = useState("");
 
   const router = useRouter();
+const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  try {
+    setIsLoading(true);
+    setError("");
 
-    try {
-      setIsLoading(true);
-      setError("");
+   await API.post("/api/v1/users/register", {
+     username,
+     email,
+     password,
+     fullname,
+   });
 
-      await API.post("/api/v1/users/register", {
-        username,
-        email,
-        password,
-        fullname, // 
-      });
+   setUsername("");
+   setEmail("");
+   setPassword("");
+   setFullname("");
 
-      router.push("/login");
-    } catch (err) {
-      setError("Registration failed. Try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    router.push("/login");
+  } catch (err: unknown) {
+    const error = err as {
+      response?: {
+        data?: {
+          message?: string;
+          error?: string;
+        };
+      };
+    };
+
+    const message =
+      error?.response?.data?.message ||
+      error?.response?.data?.error ||
+      "Registration failed";
+
+    setError(message);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 px-4">
