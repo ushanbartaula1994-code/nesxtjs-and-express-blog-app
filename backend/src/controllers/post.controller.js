@@ -157,9 +157,9 @@ export const deletePost = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Post not found");
   }
 
-  if (post.author.toString() !== req.user._id.toString()) {
-    throw new ApiError(403, "Not allowed to delete this post");
-  }
+ if (!post.author || post.author.toString() !== req.user._id.toString()) {
+   throw new ApiError(403, "Not allowed to delete this post");
+ }
 
   await post.deleteOne();
 
