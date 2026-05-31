@@ -3,21 +3,31 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js";
+import { registerSchema } from "../validations/Auth.validation.js";
+import { loginSchema } from "../validations/Auth.validation.js";
 
-// REGISTER USER
+// Register User
+
 export const registerUser = asyncHandler(async (req, res) => {
-  const { username, email, password, fullname } = req.body;
+  // 1. Zod validation
+  const result = registerSchema.safeParse(req.body);
 
-  if (!username || !email || !password || !fullname) {
-    throw new ApiError(400, "All fields are required");
+  if (!result.success) {
+    throw new ApiError(400, "validation failed", result.error.issues);
   }
 
-  const existingUser = await User.findOne({ email });
+  const { username, email, password, fullname } = result.data;
+
+  // 2. Check existing user
+  const existingUser = await User.findOne({
+    $or: [{ email }, { username }],
+  });
 
   if (existingUser) {
     throw new ApiError(409, "User already exists");
   }
 
+  // 3. Create user
   const user = await User.create({
     username,
     email,
@@ -25,8 +35,10 @@ export const registerUser = asyncHandler(async (req, res) => {
     fullname,
   });
 
+  // 4. Remove password
   const createdUser = await User.findById(user._id).select("-password");
 
+  // 5. Response
   return res
     .status(201)
     .json(new ApiResponse(201, createdUser, "User registered successfully"));
@@ -34,11 +46,14 @@ export const registerUser = asyncHandler(async (req, res) => {
 
 // LOGIN USER
 export const loginUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  //zod validation
+  const result = loginSchema.safeParse(req.body);
 
-  if (!email || !password) {
-    throw new ApiError(400, "Email and password are required");
+  if (!result.success) {
+    throw new ApiError(400, result.error.issues[0].message);
   }
+
+  const { email, password } = result.data;
 
   const user = await User.findOne({ email });
 
@@ -52,13 +67,14 @@ export const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Invalid credentials");
   }
 
-  const accessToken = generateAccessToken(user);
-  const refreshToken = generateRefreshToken(user);
+  const accessToken = generateAccessToken(user._id);
+  const refreshToken = generateRefreshToken(user._id);
 
   user.refreshToken = refreshToken;
   await user.save();
 
-  const loggedInUser = await User.findById(user._id).select("-password");
+  const loggedInUser = user.toObject();
+  delete loggedInUser.password;
 
   const cookieOptions = {
     httpOnly: true,
