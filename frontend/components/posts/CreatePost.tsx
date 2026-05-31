@@ -21,37 +21,42 @@ function CreatePost() {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [image, setImage] = useState("");
+ const [image, setImage] = useState<File | null>(null);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
 
-    try {
-      setLoading(true);
-      setError("");
+  try {
+    setLoading(true);
+    setError("");
 
-      await API.post("/api/v1/posts", {
-        title,
-        content,
-        image: image || undefined,
-      });
+    const formData = new FormData();
 
-      setTitle("");
-      setContent("");
-      setImage("");
+    formData.append("title", title);
+    formData.append("content", content);
 
-      router.push("/posts");
-      router.refresh();
-    } catch (err) {
-      console.log(err);
-      setError("Failed to create post");
-    } finally {
-      setLoading(false);
+    if (image) {
+      formData.append("image", image);
     }
-  };
+
+    await API.post("/api/v1/posts", formData);
+
+    setTitle("");
+    setContent("");
+    setImage(null);
+
+    router.push("/posts");
+    router.refresh();
+  } catch (err) {
+    console.log(err);
+    setError("Failed to create post");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="w-full min-h-screen bg-[#f9f6f2] flex items-center justify-center px-4">
@@ -80,9 +85,12 @@ function CreatePost() {
             />
 
             <Input
-              placeholder="Image URL (optional)"
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) setImage(file);
+              }}
             />
 
             {error && (
