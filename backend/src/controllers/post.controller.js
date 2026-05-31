@@ -10,6 +10,7 @@ import mongoose from "mongoose";
 
 export const createPost = asyncHandler(async (req, res) => {
   const { title, content } = req.body || {};
+  console.log("FILE RECEIVED:", req.file);
 
   if (!title || !content) {
     throw new ApiError(400, "Title and content are required");
