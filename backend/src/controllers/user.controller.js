@@ -14,7 +14,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 
  if (!result.success) {
    const errors = formatZodErrors(result.error.issues);
-   throw new ApiError(400,"validation fail" errors);
+   throw new ApiError(400,"validation fail" ,errors);
  }
 
   const { username, email, password, fullname } = result.data;
@@ -50,7 +50,7 @@ export const loginUser = asyncHandler(async (req, res) => {
   const result = loginSchema.safeParse(req.body);
 if (!result.success) {
   const errors = formatZodErrors(result.error.issues);
-  throw new ApiError(400,"validation failed" errors);
+  throw new ApiError(400,"validation failed", errors);
 }
 
   const { email, password } = result.data;
