@@ -41,11 +41,8 @@ export default function EditPostForm({ post }: EditPostFormProps) {
       }
        console.log("Sending request to:", `/api/v1/posts/${post._id}`)
 
-     const response = await API.patch(`/api/v1/posts/${post._id}`, formData, {
-       headers: {
-         "Content-Type": "multipart/form-data",
-       },
-     });
+     const response = await API.patch(`/api/v1/posts/${post._id}`, formData
+     );
      console.log("success",response.data)
 
       router.replace("/posts");
