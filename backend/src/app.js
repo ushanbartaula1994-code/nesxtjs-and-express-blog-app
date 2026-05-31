@@ -40,13 +40,13 @@ app.use((req, res) => {
     success: false,
     message: "Route not found",
   });
-});
-app.use((err, req, res, next) => {
+});app.use((err, req, res, next) => {
   console.error("GLOBAL ERROR:", err);
 
   res.status(err.statusCode || 500).json({
     success: false,
     message: err.message || "Internal Server Error",
+    data: err.errors || {}, 
   });
 });
 export default app;
