@@ -29,6 +29,7 @@ export const createPost = asyncHandler(async (req, res) => {
     const result = await cloudinary.uploader.upload(dataURI, {
       folder: "blog-images",
     });
+    console.log("CLOUDINARY RESULT:", result);
 
     imageUrl = result.secure_url;
   }
