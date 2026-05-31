@@ -8,43 +8,37 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
-function RegisterForm() {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [fullname, setFullname] = useState("");
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { registerSchema } from "@/validations/registerSchema";
+import { z } from "zod";
 
+type RegisterFormData = z.infer<typeof registerSchema>;
+
+function RegisterForm() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  const [errors, setErrors] = useState<{
-    email?: string;
-    password?: string;
-    username?: string;
-    fullname?: string;
-    general?: string;
-  }>({});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+    reset,
+    setFocus,
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+    mode: "all",
+    reValidateMode: "onChange",
+  });
 
-  const router = useRouter();
-
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const onSubmit = async (data: RegisterFormData) => {
     try {
       setIsLoading(true);
-      setErrors({});
 
-      await API.post("/api/v1/users/register", {
-        username,
-        email,
-        password,
-        fullname,
-      });
+      await API.post("/api/v1/users/register", data);
 
-      setUsername("");
-      setEmail("");
-      setPassword("");
-      setFullname("");
-
+      reset();
       router.push("/login");
     } catch (err: unknown) {
       const error = err as {
@@ -58,15 +52,28 @@ function RegisterForm() {
 
       const fieldErrors = error?.response?.data?.data;
 
-      // ✅ FIELD LEVEL ERRORS (Stripe style)
-      if (fieldErrors && Object.keys(fieldErrors).length > 0) {
-        setErrors(fieldErrors);
+      //FIELD LEVEL ERRORS
+      if (fieldErrors) {
+        Object.entries(fieldErrors).forEach(([key, value]) => {
+          setError(key as keyof RegisterFormData, {
+            type: "server",
+            message: value as string,
+          });
+        });
+
+       
+        const firstErrorField = Object.keys(fieldErrors)[0];
+
+        if (firstErrorField) {
+          setFocus(firstErrorField as keyof RegisterFormData);
+        }
+
         return;
       }
 
-      // fallback
-      setErrors({
-        general: error?.response?.data?.message || "Registration failed",
+      
+      setError("root", {
+        message: error?.response?.data?.message || "Registration failed",
       });
     } finally {
       setIsLoading(false);
@@ -81,89 +88,74 @@ function RegisterForm() {
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={onSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Full Name */}
             <div className="space-y-2">
               <Label>Full Name</Label>
               <Input
-                value={fullname}
-                onChange={(e) => {
-                  setFullname(e.target.value);
-                  setErrors((p) => ({ ...p, fullname: "" }));
-                }}
+                {...register("fullname")}
                 placeholder="Enter full name"
                 className={errors.fullname ? "border-red-500" : ""}
-                required
               />
               {errors.fullname && (
-                <p className="text-sm text-red-500">{errors.fullname}</p>
+                <p className="text-sm text-red-500">
+                  {errors.fullname.message}
+                </p>
               )}
             </div>
 
-            {/* Username */}
+         
             <div className="space-y-2">
               <Label>Username</Label>
               <Input
-                value={username}
-                onChange={(e) => {
-                  setUsername(e.target.value);
-                  setErrors((p) => ({ ...p, username: "" }));
-                }}
+                {...register("username")}
                 placeholder="Enter username"
                 className={errors.username ? "border-red-500" : ""}
-                required
               />
               {errors.username && (
-                <p className="text-sm text-red-500">{errors.username}</p>
+                <p className="text-sm text-red-500">
+                  {errors.username.message}
+                </p>
               )}
             </div>
 
-            {/* Email */}
+          
             <div className="space-y-2">
               <Label>Email</Label>
               <Input
+                {...register("email")}
                 type="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setErrors((p) => ({ ...p, email: "" }));
-                }}
                 placeholder="Enter email"
                 className={errors.email ? "border-red-500" : ""}
-                required
               />
               {errors.email && (
-                <p className="text-sm text-red-500">{errors.email}</p>
+                <p className="text-sm text-red-500">{errors.email.message}</p>
               )}
             </div>
 
-            {/* Password */}
+          
             <div className="space-y-2">
               <Label>Password</Label>
               <Input
+                {...register("password")}
                 type="password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  setErrors((p) => ({ ...p, password: "" }));
-                }}
                 placeholder="Enter password"
                 className={errors.password ? "border-red-500" : ""}
-                required
               />
               {errors.password && (
-                <p className="text-sm text-red-500">{errors.password}</p>
+                <p className="text-sm text-red-500">
+                  {errors.password.message}
+                </p>
               )}
             </div>
 
-            {/* General Error */}
-            {errors.general && (
+            
+            {"root" in errors && (
               <p className="text-sm text-red-500 bg-red-50 p-2 rounded-md">
-                {errors.general}
+                {errors.root?.message}
               </p>
             )}
 
-            {/* Submit */}
             <Button
               type="submit"
               disabled={isLoading}
