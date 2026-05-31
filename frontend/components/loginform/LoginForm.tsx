@@ -13,6 +13,7 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
   const [error, setError] = useState("");
 
   const router = useRouter();
@@ -38,24 +39,29 @@ function LoginForm() {
       setPassword("");
 
       router.push("/posts");
-    } catch (error: unknown) {
-      console.log(error);
-
-      const err = error as {
+    } catch (err: unknown) {
+      const error = err as {
         response?: {
           data?: {
             message?: string;
-            error?: string;
+            data?: Record<string, string>;
           };
         };
       };
 
-      const message =
-        err?.response?.data?.message ||
-        err?.response?.data?.error ||
-        "Something went wrong";
+      const fieldErrors = error?.response?.data?.data;
 
-      setError(message);
+      
+      if (fieldErrors && Object.keys(fieldErrors).length > 0) {
+        const firstFieldError = Object.values(fieldErrors)[0];
+        setError(firstFieldError as string);
+        return;
+      }
+
+      
+      setError(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setIsLoading(false);
     }
   };
 

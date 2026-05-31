@@ -5,20 +5,21 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js";
 import { registerSchema } from "../validations/Auth.validation.js";
 import { loginSchema } from "../validations/Login.validation.js";
+import { formatZodErrors } from "../utils/ZodError.js";
 
 // Register User
-
 export const registerUser = asyncHandler(async (req, res) => {
-  // 1. Zod validation
+  //  Zod validation
   const result = registerSchema.safeParse(req.body);
 
-  if (!result.success) {
-    throw new ApiError(400, "validation failed", result.error.issues);
-  }
+ if (!result.success) {
+   const errors = formatZodErrors(result.error.issues);
+   throw new ApiError(400, "Validation failed", errors);
+ }
 
   const { username, email, password, fullname } = result.data;
 
-  // 2. Check existing user
+  //  Check existing user
   const existingUser = await User.findOne({
     $or: [{ email }, { username }],
   });
@@ -27,7 +28,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(409, "User already exists");
   }
 
-  // 3. Create user
+  //  Create user
   const user = await User.create({
     username,
     email,
@@ -35,23 +36,22 @@ export const registerUser = asyncHandler(async (req, res) => {
     fullname,
   });
 
-  // 4. Remove password
+  //  Remove password
   const createdUser = await User.findById(user._id).select("-password");
 
-  // 5. Response
+  // . Response
   return res
     .status(201)
     .json(new ApiResponse(201, createdUser, "User registered successfully"));
 });
-
 // LOGIN USER
 export const loginUser = asyncHandler(async (req, res) => {
   //zod validation
   const result = loginSchema.safeParse(req.body);
-
-  if (!result.success) {
-    throw new ApiError(400, result.error.issues[0].message);
-  }
+if (!result.success) {
+  const errors = formatZodErrors(result.error.issues);
+  throw new ApiError(400, "Validation failed", errors);
+}
 
   const { email, password } = result.data;
 

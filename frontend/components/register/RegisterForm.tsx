@@ -12,53 +12,53 @@ function RegisterForm() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fullname, setFullname] = useState(""); 
+  const [fullname, setFullname] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+
+  const [errors, setErrors] = useState<{
+    email?: string;
+    password?: string;
+    username?: string;
+    fullname?: string;
+  }>({});
 
   const router = useRouter();
-const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
 
-  try {
-    setIsLoading(true);
-    setError("");
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-   await API.post("/api/v1/users/register", {
-     username,
-     email,
-     password,
-     fullname,
-   });
+    try {
+      setIsLoading(true);
+      setErrors({}); // clear previous errors
 
-   setUsername("");
-   setEmail("");
-   setPassword("");
-   setFullname("");
+      await API.post("/api/v1/users/register", {
+        username,
+        email,
+        password,
+        fullname,
+      });
 
-    router.push("/login");
-  } catch (err: unknown) {
-    const error = err as {
-      response?: {
-        data?: {
-          message?: string;
-          error?: string;
+      setUsername("");
+      setEmail("");
+      setPassword("");
+      setFullname("");
+
+      router.push("/login");
+    } catch (err: unknown) {
+      const error = err as {
+        response?: {
+          data?: {
+            data?: Record<string, string>;
+          };
         };
       };
-    };
 
-    const message =
-      error?.response?.data?.message ||
-      error?.response?.data?.error ||
-      "Registration failed";
-
-    setError(message);
-  } finally {
-    setIsLoading(false);
-  }
-};
-
+      setErrors(error?.response?.data?.data || {});
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 px-4">
@@ -69,26 +69,40 @@ const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
         <CardContent>
           <form onSubmit={onSubmit} className="space-y-4">
-            
+         
             <div className="space-y-2">
               <Label>Full Name</Label>
               <Input
                 value={fullname}
-                onChange={(e) => setFullname(e.target.value)}
+                onChange={(e) => {
+                  setFullname(e.target.value);
+                  setErrors((prev) => ({ ...prev, fullname: "" }));
+                }}
                 placeholder="Enter full name"
+                className={errors.fullname ? "border-red-500" : ""}
                 required
               />
+              {errors.fullname && (
+                <p className="text-sm text-red-500">{errors.fullname}</p>
+              )}
             </div>
 
-            {/* Username */}
+           
             <div className="space-y-2">
               <Label>Username</Label>
               <Input
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                  setErrors((prev) => ({ ...prev, username: "" }));
+                }}
                 placeholder="Enter username"
+                className={errors.username ? "border-red-500" : ""}
                 required
               />
+              {errors.username && (
+                <p className="text-sm text-red-500">{errors.username}</p>
+              )}
             </div>
 
             {/* Email */}
@@ -97,32 +111,39 @@ const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               <Input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setErrors((prev) => ({ ...prev, email: "" }));
+                }}
                 placeholder="Enter email"
+                className={errors.email ? "border-red-500" : ""}
                 required
               />
+              {errors.email && (
+                <p className="text-sm text-red-500">{errors.email}</p>
+              )}
             </div>
 
-            {/* Password */}
+            
             <div className="space-y-2">
               <Label>Password</Label>
               <Input
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setErrors((prev) => ({ ...prev, password: "" }));
+                }}
                 placeholder="Enter password"
+                className={errors.password ? "border-red-500" : ""}
                 required
               />
+              {errors.password && (
+                <p className="text-sm text-red-500">{errors.password}</p>
+              )}
             </div>
 
-            
-            {error && (
-              <p className="text-sm text-red-500 bg-red-50 p-2 rounded-md">
-                {error}
-              </p>
-            )}
-
-            {/* Submit */}
+           
             <Button
               type="submit"
               disabled={isLoading}
