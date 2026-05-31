@@ -21,6 +21,7 @@ function RegisterForm() {
     password?: string;
     username?: string;
     fullname?: string;
+    general?: string;
   }>({});
 
   const router = useRouter();
@@ -30,7 +31,7 @@ function RegisterForm() {
 
     try {
       setIsLoading(true);
-      setErrors({}); // clear previous errors
+      setErrors({});
 
       await API.post("/api/v1/users/register", {
         username,
@@ -49,12 +50,24 @@ function RegisterForm() {
       const error = err as {
         response?: {
           data?: {
+            message?: string;
             data?: Record<string, string>;
           };
         };
       };
 
-      setErrors(error?.response?.data?.data || {});
+      const fieldErrors = error?.response?.data?.data;
+
+      // ✅ FIELD LEVEL ERRORS (Stripe style)
+      if (fieldErrors && Object.keys(fieldErrors).length > 0) {
+        setErrors(fieldErrors);
+        return;
+      }
+
+      // fallback
+      setErrors({
+        general: error?.response?.data?.message || "Registration failed",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -69,14 +82,14 @@ function RegisterForm() {
 
         <CardContent>
           <form onSubmit={onSubmit} className="space-y-4">
-         
+            {/* Full Name */}
             <div className="space-y-2">
               <Label>Full Name</Label>
               <Input
                 value={fullname}
                 onChange={(e) => {
                   setFullname(e.target.value);
-                  setErrors((prev) => ({ ...prev, fullname: "" }));
+                  setErrors((p) => ({ ...p, fullname: "" }));
                 }}
                 placeholder="Enter full name"
                 className={errors.fullname ? "border-red-500" : ""}
@@ -87,14 +100,14 @@ function RegisterForm() {
               )}
             </div>
 
-           
+            {/* Username */}
             <div className="space-y-2">
               <Label>Username</Label>
               <Input
                 value={username}
                 onChange={(e) => {
                   setUsername(e.target.value);
-                  setErrors((prev) => ({ ...prev, username: "" }));
+                  setErrors((p) => ({ ...p, username: "" }));
                 }}
                 placeholder="Enter username"
                 className={errors.username ? "border-red-500" : ""}
@@ -113,7 +126,7 @@ function RegisterForm() {
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
-                  setErrors((prev) => ({ ...prev, email: "" }));
+                  setErrors((p) => ({ ...p, email: "" }));
                 }}
                 placeholder="Enter email"
                 className={errors.email ? "border-red-500" : ""}
@@ -124,7 +137,7 @@ function RegisterForm() {
               )}
             </div>
 
-            
+            {/* Password */}
             <div className="space-y-2">
               <Label>Password</Label>
               <Input
@@ -132,7 +145,7 @@ function RegisterForm() {
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
-                  setErrors((prev) => ({ ...prev, password: "" }));
+                  setErrors((p) => ({ ...p, password: "" }));
                 }}
                 placeholder="Enter password"
                 className={errors.password ? "border-red-500" : ""}
@@ -143,7 +156,14 @@ function RegisterForm() {
               )}
             </div>
 
-           
+            {/* General Error */}
+            {errors.general && (
+              <p className="text-sm text-red-500 bg-red-50 p-2 rounded-md">
+                {errors.general}
+              </p>
+            )}
+
+            {/* Submit */}
             <Button
               type="submit"
               disabled={isLoading}

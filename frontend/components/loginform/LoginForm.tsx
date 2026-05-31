@@ -14,7 +14,11 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState<{
+    email?: string;
+    password?: string;
+    general?: string;
+  }>({});
 
   const router = useRouter();
   const { refreshUser } = useAuth();
@@ -24,7 +28,7 @@ function LoginForm() {
 
     try {
       setIsLoading(true);
-      setError("");
+      setErrors({});
 
       const res = await API.post("/api/v1/users/login", {
         email,
@@ -51,15 +55,16 @@ function LoginForm() {
 
       const fieldErrors = error?.response?.data?.data;
 
-      
+      // ✅ FIELD LEVEL ERRORS (LINE BY LINE)
       if (fieldErrors && Object.keys(fieldErrors).length > 0) {
-        const firstFieldError = Object.values(fieldErrors)[0];
-        setError(firstFieldError as string);
+        setErrors(fieldErrors);
         return;
       }
 
-      
-      setError(error?.response?.data?.message || "Something went wrong");
+      // fallback
+      setErrors({
+        general: error?.response?.data?.message || "Something went wrong",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -88,9 +93,14 @@ function LoginForm() {
                 placeholder="Enter your email"
                 onChange={(e) => {
                   setEmail(e.target.value);
-                  setError("");
+                  setErrors((prev) => ({ ...prev, email: "" }));
                 }}
               />
+              {errors.email && (
+                <p className="text-sm text-red-500 bg-red-50 p-2 rounded-md">
+                  {errors.email}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -102,14 +112,19 @@ function LoginForm() {
                 placeholder="Enter password"
                 onChange={(e) => {
                   setPassword(e.target.value);
-                  setError("");
+                  setErrors((prev) => ({ ...prev, password: "" }));
                 }}
               />
+              {errors.password && (
+                <p className="text-sm text-red-500 bg-red-50 p-2 rounded-md">
+                  {errors.password}
+                </p>
+              )}
             </div>
 
-            {error && (
+            {errors.general && (
               <p className="text-sm text-red-500 bg-red-50 p-2 rounded-md">
-                {error}
+                {errors.general}
               </p>
             )}
 
